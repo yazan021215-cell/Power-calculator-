@@ -4,46 +4,233 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Power Calculator</title>
+    <meta name="theme-color" content="#0b0b0b">
+    <title>Power Calculator ⚡</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: #0b0b0b;
+            color: white;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .calculator {
+            width: 100%;
+            max-width: 380px;
+            padding: 25px;
+            background: #151515;
+            border: 1px solid #333;
+            border-radius: 20px;
+            box-shadow: 0 0 30px #ffcc0020;
+        }
+
+        .logo {
+            color: #ffcc00;
+            font-size: 15px;
+            font-weight: bold;
+            letter-spacing: 3px;
+        }
+
+        h1 {
+            font-size: 30px;
+            margin: 12px 0;
+        }
+
+        h1 span {
+            color: #ffcc00;
+        }
+
+        .subtitle {
+            color: #999;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            margin: 7px 0;
+            border: 1px solid #444;
+            border-radius: 10px;
+            background: #222;
+            color: white;
+            font-size: 17px;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #ffcc00;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 14px 5px;
+            border: none;
+            border-radius: 10px;
+            background: #ffcc00;
+            color: #111;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #ffe477;
+            transform: translateY(-2px);
+        }
+
+        .clear {
+            grid-column: span 4;
+            background: #292929;
+            color: white;
+            font-size: 15px;
+        }
+
+        .result-box {
+            margin-top: 22px;
+            padding: 18px;
+            background: #202020;
+            border-radius: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .result-label {
+            color: #999;
+            font-size: 14px;
+        }
+
+        #result {
+            color: #ffcc00;
+            font-size: 27px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #666;
+            font-size: 12px;
+        }
+
+        footer span {
+            color: #ffcc00;
+        }
+    </style>
 </head>
+
 <body>
-    <h1>⚡ Power Calculator</h1>
-    <p>Welcome to Power Calculator!</p>
 
-    <input type="number" id="num1" placeholder="First number">
-    <input type="number" id="num2" placeholder="Second number">
+    <main class="calculator">
+        <div class="logo">⚡ POWER NETWORK</div>
 
-    <br><br>
+        <h1>Power <span>Calculator</span></h1>
 
-    <button onclick="calculate('+')">+</button>
-    <button onclick="calculate('-')">−</button>
-    <button onclick="calculate('*')">×</button>
-    <button onclick="calculate('/')">÷</button>
+        <p class="subtitle">Simple. Fast. Powerful.</p>
 
-    <h2 id="result">Result: 0</h2>
+        <input
+            type="number"
+            id="num1"
+            placeholder="Enter first number"
+            step="any"
+        >
+
+        <input
+            type="number"
+            id="num2"
+            placeholder="Enter second number"
+            step="any"
+        >
+
+        <div class="buttons">
+            <button onclick="calculate('+')">+</button>
+            <button onclick="calculate('-')">−</button>
+            <button onclick="calculate('*')">×</button>
+            <button onclick="calculate('/')">÷</button>
+            <button class="clear" onclick="clearCalculator()">
+                CLEAR
+            </button>
+        </div>
+
+        <div class="result-box">
+            <div class="result-label">YOUR RESULT</div>
+            <div id="result" aria-live="polite">0</div>
+        </div>
+
+        <footer>
+            Made with <span>⚡</span> by Power Network
+        </footer>
+    </main>
 
     <script>
         function calculate(operator) {
-            let a = Number(document.getElementById("num1").value);
-            let b = Number(document.getElementById("num2").value);
-            let result;
+            const first = document.getElementById("num1").value;
+            const second = document.getElementById("num2").value;
+            const output = document.getElementById("result");
 
-            if (operator === "+") result = a + b;
-            if (operator === "-") result = a - b;
-            if (operator === "*") result = a * b;
-
-            if (operator === "/") {
-                if (b === 0) {
-                    document.getElementById("result").textContent =
-                        "Cannot divide by zero!";
-                    return;
-                }
-                result = a / b;
+            if (first.trim() === "" || second.trim() === "") {
+                output.textContent = "Enter both numbers!";
+                return;
             }
 
-            document.getElementById("result").textContent =
-                "Result: " + result;
+            const a = Number(first);
+            const b = Number(second);
+            let answer;
+
+            switch (operator) {
+                case "+":
+                    answer = a + b;
+                    break;
+
+                case "-":
+                    answer = a - b;
+                    break;
+
+                case "*":
+                    answer = a * b;
+                    break;
+
+                case "/":
+                    if (b === 0) {
+                        output.textContent =
+                            "Cannot divide by zero!";
+                        return;
+                    }
+
+                    answer = a / b;
+                    break;
+            }
+
+            if (!Number.isFinite(answer)) {
+                output.textContent = "Number is too large!";
+                return;
+            }
+
+            output.textContent = Number(answer.toPrecision(12)).toString();
+        }
+
+        function clearCalculator() {
+            document.getElementById("num1").value = "";
+            document.getElementById("num2").value = "";
+            document.getElementById("result").textContent = "0";
         }
     </script>
+
 </body>
 </html>
